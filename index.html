@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <meta name="theme-color" content="#ffffff">
+    <meta name="theme-color" content="#cba052">
     <meta name="mobile-web-app-capable" content="yes">
     <title>Scheda D&D 5.5e - VTT Edition</title>
     
@@ -25,27 +25,26 @@
 <div class="sheet-container">
     
     <div class="top-bar-box">
-        <div class="top-bar-mobile-row">
-            <div class="roll-mode-toggle" title="Scegli se lanciare i d20 normalmente, con vantaggio o svantaggio">
-                <input type="radio" id="mode-dis" name="roll-mode" class="saveable-radio" value="dis" onchange="syncRollMode('dis')"><label for="mode-dis" class="btn-toggle">Svantaggio</label>
-                <input type="radio" id="mode-norm" name="roll-mode" class="saveable-radio" value="norm" checked onchange="syncRollMode('norm')"><label for="mode-norm" class="btn-toggle">Normale</label>
-                <input type="radio" id="mode-adv" name="roll-mode" class="saveable-radio" value="adv" onchange="syncRollMode('adv')"><label for="mode-adv" class="btn-toggle">Vantaggio</label>
-            </div>
-            <button class="btn-tool btn-hamburger" onclick="document.getElementById('sys-toolbar').classList.toggle('show')">☰ Opzioni</button>
+        <div class="roll-mode-toggle" title="Scegli se lanciare i d20 normalmente, con vantaggio o svantaggio">
+            <input type="radio" id="mode-dis" name="roll-mode" class="saveable-radio" value="dis" onchange="syncRollMode('dis')"><label for="mode-dis" class="btn-toggle">Svantaggio</label>
+            <input type="radio" id="mode-norm" name="roll-mode" class="saveable-radio" value="norm" checked onchange="syncRollMode('norm')"><label for="mode-norm" class="btn-toggle">Normale</label>
+            <input type="radio" id="mode-adv" name="roll-mode" class="saveable-radio" value="adv" onchange="syncRollMode('adv')"><label for="mode-adv" class="btn-toggle">Vantaggio</label>
         </div>
-        
+
         <div class="system-toolbar" id="sys-toolbar">
-            <select id="char-selector" class="btn-tool" onchange="cambiaPersonaggio(this.value)" style="background: var(--accent-dim); font-weight: bold; color: var(--text-main); border-color: var(--accent-main);" title="Passa rapidamente da un personaggio all'altro">
-                <option value="">-- Caricamento Eroi... --</option>
+            <select id="char-selector" class="btn-tool" onchange="cambiaPersonaggio(this.value)" title="Passa rapidamente da un personaggio all'altro">
+                <option value="" class="title-option">-- I Miei Eroi --</option>
             </select>
             
             <select id="options-menu" class="btn-tool" onchange="handleMenuOptions(this)" title="Gestisci la tua scheda">
-                <option value="">⚙️ Gestione</option>
+                <option value="" class="title-option">⚙️ Gestione</option>
                 <option value="new">➕ Nuovo PG</option>
                 <option value="delete">🗑️ Elimina PG</option>
                 <option value="export">💾 Esporta Dati</option>
                 <option value="import">📂 Importa Dati</option>
-                <option value="reset" style="color: red; font-weight: bold;">⚠️ Reset Totale</option>
+                <option value="print">🖨️ Stampa</option>
+                <option value="fullscreen">⛶ Schermo Intero</option>
+                <option value="reset" class="danger-option">⚠️ Reset Totale</option>
             </select>
             
             <select id="theme-selector" class="saveable btn-tool" onchange="cambiaTema(this.value)" title="Cambia lo stile visivo della scheda">
@@ -56,8 +55,6 @@
             </select>
             
             <input type="file" id="import-file" style="display: none;" accept=".json" onchange="importaDati(event)">
-            <button id="btn-fullscreen" onclick="toggleFullScreen()" class="btn-tool" title="Schermo Intero">⛶</button>
-            <button onclick="window.print()" class="btn-tool" title="Stampa in formato A4">🖨️</button>
         </div>
     </div>
 
@@ -87,12 +84,8 @@
                     </div>
                     <div class="bio-item" style="min-width: 40px; flex: 0.5;">
                         <label>Lvl</label>
-                        <select id="char-level" class="saveable" onchange="aggiornaTutto()" title="Livello attuale (influenza Bonus di Competenza e Slot)">
-                            <option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option>
-                            <option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option>
-                            <option value="9">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option>
-                            <option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option>
-                            <option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option>
+                        <select id="char-level" class="saveable" onchange="aggiornaTutto()" title="Livello attuale">
+                            <option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option>
                         </select>
                     </div>
                     <div class="bio-item">
@@ -124,24 +117,25 @@
                 <div class="stat-item spell-dep rollable" id="spell-atk-cell" title="Clicca qui per lanciare il dado per un Attacco Magico generico"><label>Atk Magia 🎲</label><span class="val" id="spell-atk">-</span></div>
             </div>
         </div>
+    </div>
 
-        <div class="hero-conditions">
-            <span class="hero-conditions-title" title="Spunta le condizioni per applicare automaticamente bonus/malus ai tiri!">Stato Attuale:</span>
-            <div class="conditions-container">
-                <label class="cond-pill" title="Svantaggio ai tiri per colpire, i nemici hanno vantaggio contro di te"><input type="checkbox" class="saveable" id="cond-accecato" onchange="salvaDatiDebounced()"><span>Accecato</span></label>
-                <label class="cond-pill" title="Non puoi attaccare o fare azioni magiche contro la fonte del fascino"><input type="checkbox" class="saveable" id="cond-affascinato" onchange="salvaDatiDebounced()"><span>Affascinato</span></label>
-                <label class="cond-pill" title="Velocità ridotta a 0"><input type="checkbox" class="saveable" id="cond-afferrato" onchange="salvaDatiDebounced()"><span>Afferrato</span></label>
-                <label class="cond-pill" title="Non puoi sentire, fallisci automaticamente le prove di udito"><input type="checkbox" class="saveable" id="cond-assordato" onchange="salvaDatiDebounced()"><span>Assordato</span></label>
-                <label class="cond-pill" title="Svantaggio ai tiri per colpire e abilità"><input type="checkbox" class="saveable" id="cond-avvelenato" onchange="salvaDatiDebounced()"><span>Avvelenato</span></label>
-                <label class="cond-pill" title="Hai vantaggio ai tiri, i nemici hanno svantaggio contro di te"><input type="checkbox" class="saveable" id="cond-invisibile" onchange="salvaDatiDebounced()"><span>Invisibile</span></label>
-                <label class="cond-pill" title="Non puoi fare azioni o reazioni"><input type="checkbox" class="saveable" id="cond-inabile" onchange="salvaDatiDebounced()"><span>Inabile</span></label>
-                <label class="cond-pill" title="Sei inabile, non puoi muoverti e fallisci TS Forza/Des. Gli attacchi vicini sono critici."><input type="checkbox" class="saveable" id="cond-paralizzato" onchange="salvaDatiDebounced()"><span>Paralizzato</span></label>
-                <label class="cond-pill" title="Sei trasformato in pietra solida (resistenza a tutti i danni)"><input type="checkbox" class="saveable" id="cond-pietrificato" onchange="salvaDatiDebounced()"><span>Pietrificato</span></label>
-                <label class="cond-pill" title="Sei a terra. Svantaggio ai tuoi attacchi in mischia"><input type="checkbox" class="saveable" id="cond-prono" onchange="salvaDatiDebounced()"><span>Prono</span></label>
-                <label class="cond-pill" title="Svantaggio ai tiri per colpire e abilità mentre vedi la fonte di paura"><input type="checkbox" class="saveable" id="cond-spaventato" onchange="salvaDatiDebounced()"><span>Spaventato</span></label>
-                <label class="cond-pill" title="Sei inabile, non puoi muoverti e fallisci TS Forza/Des"><input type="checkbox" class="saveable" id="cond-stordito" onchange="salvaDatiDebounced()"><span>Stordito</span></label>
-                <label class="cond-pill" title="Velocità 0, svantaggio ai tuoi attacchi, i nemici hanno vantaggio"><input type="checkbox" class="saveable" id="cond-trattenuto" onchange="salvaDatiDebounced()"><span>Trattenuto</span></label>
-            </div>
+    <div class="box full-width-box conditions-box collapsed-box" style="margin-top: -5px; margin-bottom: 0px;">
+        <button class="btn-clear-box" onclick="resetCondizioni()" title="Rimuovi tutti gli stati">🗑️</button>
+        <div class="box-title">Stati & Condizioni <span class="box-toggle" onclick="toggleBox(this)" title="Apri/Chiudi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></span></div>
+        <div class="conditions-grid" title="I malus e vantaggi si applicano automaticamente ai tuoi tiri se selezioni queste condizioni!">
+            <label class="cond-pill"><input type="checkbox" class="saveable" id="cond-accecato" onchange="salvaDatiDebounced()"><span>Accecato</span></label>
+            <label class="cond-pill"><input type="checkbox" class="saveable" id="cond-affascinato" onchange="salvaDatiDebounced()"><span>Affascinato</span></label>
+            <label class="cond-pill"><input type="checkbox" class="saveable" id="cond-afferrato" onchange="salvaDatiDebounced()"><span>Afferrato</span></label>
+            <label class="cond-pill"><input type="checkbox" class="saveable" id="cond-assordato" onchange="salvaDatiDebounced()"><span>Assordato</span></label>
+            <label class="cond-pill"><input type="checkbox" class="saveable" id="cond-avvelenato" onchange="salvaDatiDebounced()"><span>Avvelenato</span></label>
+            <label class="cond-pill"><input type="checkbox" class="saveable" id="cond-invisibile" onchange="salvaDatiDebounced()"><span>Invisibile</span></label>
+            <label class="cond-pill"><input type="checkbox" class="saveable" id="cond-inabile" onchange="salvaDatiDebounced()"><span>Inabile</span></label>
+            <label class="cond-pill"><input type="checkbox" class="saveable" id="cond-paralizzato" onchange="salvaDatiDebounced()"><span>Paralizzato</span></label>
+            <label class="cond-pill"><input type="checkbox" class="saveable" id="cond-pietrificato" onchange="salvaDatiDebounced()"><span>Pietrificato</span></label>
+            <label class="cond-pill"><input type="checkbox" class="saveable" id="cond-prono" onchange="salvaDatiDebounced()"><span>Prono</span></label>
+            <label class="cond-pill"><input type="checkbox" class="saveable" id="cond-spaventato" onchange="salvaDatiDebounced()"><span>Spaventato</span></label>
+            <label class="cond-pill"><input type="checkbox" class="saveable" id="cond-stordito" onchange="salvaDatiDebounced()"><span>Stordito</span></label>
+            <label class="cond-pill"><input type="checkbox" class="saveable" id="cond-trattenuto" onchange="salvaDatiDebounced()"><span>Trattenuto</span></label>
         </div>
     </div>
 
@@ -160,7 +154,7 @@
                 <div class="skills-col">
                     <div class="skills-box box">
                         <button class="btn-clear-box" onclick="resetSalvezza()" title="Ripristina i Tiri Salvezza">🗑️</button>
-                        <div class="box-title">Tiri Salvezza</div>
+                        <div class="box-title">Tiri Salvezza <span class="box-toggle" onclick="toggleBox(this)" title="Apri/Chiudi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></span></div>
                         <div class="skill-row"><input type="checkbox" id="save-prof-str" class="saveable" onchange="document.getElementById('save-mod-str').removeAttribute('data-manual'); aggiornaTutto()" title="Competenza?"><input type="text" class="skill-mod saveable" id="save-mod-str" oninput="this.setAttribute('data-manual', 'true'); salvaDatiDebounced()" title="Modificabile a mano!"><label class="rollable" onclick="tiraDado('TS Forza', document.getElementById('save-mod-str').value)" title="Clicca per tirare">Forza 🎲</label></div>
                         <div class="skill-row"><input type="checkbox" id="save-prof-dex" class="saveable" onchange="document.getElementById('save-mod-dex').removeAttribute('data-manual'); aggiornaTutto()" title="Competenza?"><input type="text" class="skill-mod saveable" id="save-mod-dex" oninput="this.setAttribute('data-manual', 'true'); salvaDatiDebounced()" title="Modificabile a mano!"><label class="rollable" onclick="tiraDado('TS Destrezza', document.getElementById('save-mod-dex').value)" title="Clicca per tirare">Destrezza 🎲</label></div>
                         <div class="skill-row"><input type="checkbox" id="save-prof-con" class="saveable" onchange="document.getElementById('save-mod-con').removeAttribute('data-manual'); aggiornaTutto()" title="Competenza?"><input type="text" class="skill-mod saveable" id="save-mod-con" oninput="this.setAttribute('data-manual', 'true'); salvaDatiDebounced()" title="Modificabile a mano!"><label class="rollable" onclick="tiraDado('TS Costituzione', document.getElementById('save-mod-con').value)" title="Clicca per tirare">Costituzione 🎲</label></div>
@@ -171,7 +165,7 @@
 
                     <div class="skills-box box" style="padding-top: 15px;">
                         <button class="btn-clear-box" onclick="resetAbilita()" title="Ripristina le Abilità">🗑️</button>
-                        <div class="box-title">Abilità</div>
+                        <div class="box-title">Abilità <span class="box-toggle" onclick="toggleBox(this)" title="Apri/Chiudi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></span></div>
                         <div class="skill-row"><input type="checkbox" id="skill-prof-acrobatics" class="saveable" onchange="document.getElementById('skill-mod-acrobatics').removeAttribute('data-manual'); aggiornaTutto()" title="Competenza?"><input type="text" class="skill-mod saveable" id="skill-mod-acrobatics" oninput="this.setAttribute('data-manual', 'true'); salvaDatiDebounced()" title="Modificabile a mano!"><label class="rollable" onclick="tiraDado('Acrobazia', document.getElementById('skill-mod-acrobatics').value)">Acrobazia 🎲 <span class="stat-tag">(Des)</span></label></div>
                         <div class="skill-row"><input type="checkbox" id="skill-prof-animalhandling" class="saveable" onchange="document.getElementById('skill-mod-animalhandling').removeAttribute('data-manual'); aggiornaTutto()" title="Competenza?"><input type="text" class="skill-mod saveable" id="skill-mod-animalhandling" oninput="this.setAttribute('data-manual', 'true'); salvaDatiDebounced()" title="Modificabile a mano!"><label class="rollable" onclick="tiraDado('Addestrare Animali', document.getElementById('skill-mod-animalhandling').value)">Addestr. Anim 🎲 <span class="stat-tag">(Sag)</span></label></div>
                         <div class="skill-row"><input type="checkbox" id="skill-prof-arcana" class="saveable" onchange="document.getElementById('skill-mod-arcana').removeAttribute('data-manual'); aggiornaTutto()" title="Competenza?"><input type="text" class="skill-mod saveable" id="skill-mod-arcana" oninput="this.setAttribute('data-manual', 'true'); salvaDatiDebounced()" title="Modificabile a mano!"><label class="rollable" onclick="tiraDado('Arcano', document.getElementById('skill-mod-arcana').value)">Arcano 🎲 <span class="stat-tag">(Int)</span></label></div>
@@ -203,7 +197,7 @@
                 </div>
                 <div class="combat-box">
                     <div class="box-title" style="color:var(--text-muted); border-color:var(--border-color);"><span class="rollable" style="cursor:pointer; display:inline-block; padding:0 2px;" onclick="tiraDado('Iniziativa', document.getElementById('combat-init').value)" title="Clicca per tirare l'Iniziativa!">Iniziativa 🎲</span></div>
-                    <input type="text" id="combat-init" class="saveable" oninput="this.setAttribute('data-manual', 'true'); salvaDatiDebounced()" onchange="if(this.value==='') this.removeAttribute('data-manual'); aggiornaTutto();" placeholder="+0" title="Modificabile a mano! (Se la modifichi a mano, non seguirà più la Destrezza finché non la svuoti)">
+                    <input type="text" id="combat-init" class="saveable" oninput="this.setAttribute('data-manual', 'true'); salvaDatiDebounced()" onchange="if(this.value==='') this.removeAttribute('data-manual'); aggiornaTutto();" placeholder="+0" title="Modificabile a mano! (Se la modifichi, non seguirà più la Destrezza finché non la svuoti)">
                 </div>
                 <div class="combat-box">
                     <div class="box-title" style="color:var(--text-muted); border-color:var(--border-color);">Velocità</div>
@@ -212,41 +206,66 @@
             </div>
 
             <div class="box hp-master-box">
-                <div class="box-title">Salute e Sopravvivenza</div>
-                <div class="rest-buttons">
-                    <div class="rest-group">
-                        <button onclick="riposoBreve()" class="btn-rest" title="Il Riposo Breve ricarica le abilità minori e permette di spendere Dadi Vita per curarsi">☕ R. Breve</button>
-                        <button onclick="riposoLungo()" class="btn-rest" title="Il Riposo Lungo ripristina PF, metà dei Dadi Vita e tutti gli Slot e Abilità Maggiori">🏕️ R. Lungo</button>
+                <div class="box-title">Salute e Sopravvivenza <span class="box-toggle" onclick="toggleBox(this)" title="Apri/Chiudi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></span></div>
+                
+                <div class="hp-dashboard">
+                    <div class="hp-col hp-col-left">
+                        <div class="hp-stat-mini" title="I tuoi PF Totali massimi">
+                            <label>Max</label>
+                            <input type="number" id="hp-max" class="saveable no-spinners" oninput="calcolaPuntiFerita()">
+                        </div>
+                        <div class="hp-stat-mini" title="Punti Ferita Temporanei">
+                            <label style="color: var(--success);">+ Temp</label>
+                            <input type="number" id="hp-buff" class="saveable no-spinners" oninput="calcolaPuntiFerita()">
+                        </div>
+                        <div class="hp-stat-mini danger-bg" title="Somma qui i danni subiti">
+                            <label>- Danni</label>
+                            <input type="number" id="hp-debuff" class="saveable no-spinners" oninput="calcolaPuntiFerita()">
+                        </div>
+                    </div>
+                    
+                    <div class="hp-col hp-col-center">
+                        <div class="hp-total-wrapper">
+                            <span class="hp-total-label">PF Attuali</span>
+                            <input type="text" id="hp-total-calc" readonly class="hp-total-display" value="0" title="Punti Ferita Attuali (Calcolati automaticamente)">
+                            
+                            <div class="heart-monitor-container" title="Stato di Salute">
+                                <svg id="heart-icon" class="heart-icon heart-normal" viewBox="0 0 24 24">
+                                    <path fill="currentColor" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="hp-col hp-col-right">
+                        <div class="hd-compact" title="I tuoi Dadi Vita a disposizione">
+                            <label>Dadi Vita</label>
+                            <div class="hd-inputs">
+                                <input type="text" id="hd-current" class="saveable hd-input" placeholder="0" title="Dadi Vita rimasti (usali per curarti)">
+                                <span class="hd-separator">/</span>
+                                <input type="text" id="hd-total" class="saveable hd-total-display" readonly tabindex="-1" placeholder="-">
+                            </div>
+                        </div>
+                        <div class="rest-buttons-compact">
+                            <button onclick="riposoBreve()" class="btn-rest" title="Ricarica abilità minori e spendi Dadi Vita per curarti">☕ Breve</button>
+                            <button onclick="riposoLungo()" class="btn-rest" title="Ripristina PF, metà Dadi Vita e tutti gli Slot/Abilità">🏕️ Lungo</button>
+                        </div>
                     </div>
                 </div>
-                <div class="hp-calc-row">
-                    <div class="hp-grid">
-                        <div class="hp-grid-item"><label>Massimi</label><input type="number" id="hp-max" class="saveable no-spinners" oninput="calcolaPuntiFerita()" title="I tuoi PF Totali"></div>
-                        <div class="hp-grid-item"><label style="color: var(--success);">Buff (+)</label><input type="number" id="hp-buff" class="saveable no-spinners" oninput="calcolaPuntiFerita()" title="Punti Ferita Temporanei (non si sommano, tieni il valore più alto)"></div>
-                        <div class="hp-grid-item"><label style="color: var(--danger);">Danni (-)</label><input type="number" id="hp-debuff" class="saveable no-spinners" oninput="calcolaPuntiFerita()" title="Somma qui i danni che subisci"></div>
-                    </div>
-                    <div class="hp-total-wrapper">
-                        <input type="text" id="hp-total-calc" readonly class="hp-total-display" value="0" title="Punti Ferita Attuali (Calcolati automaticamente)">
-                        <div class="hp-total-label">PF Attuali</div>
-                    </div>
-                </div>
-                <hr class="dashed-divider">
-                <div class="hd-ds-row">
-                    <div class="hd-section">
-                        <label title="Usali durante il Riposo Breve per curarti">Dadi Vita</label>
-                        <input type="text" id="hd-current" class="saveable hd-input" placeholder="Rimasti">
-                        <input type="text" id="hd-total" class="saveable" readonly tabindex="-1" style="width: 100%; border: none; background: transparent; color: var(--text-muted); font-weight: bold; font-size: 11px; text-align: center; outline: none; margin-top: 2px;">
-                    </div>
-                    <div class="ds-section">
-                        <label title="Quando sei a 0 PF, fai un TS Morte ogni turno. 3 Successi sei stabile, 3 Fallimenti muori.">TS contro la Morte</label>
+                
+                <hr class="dashed-divider" style="margin: 10px 0;">
+                
+                <div class="ds-section-horizontal" title="A 0 PF fai un TS Morte ogni turno. 3 Successi: stabile. 3 Fallimenti: morte.">
+                    <label>Tiri Salvezza contro la Morte</label>
+                    <div class="ds-checks-row">
                         <div class="ds-checks">
-                            <span style="color:var(--success); font-size:10px; font-weight:bold; width: 35px;">SUCC</span>
+                            <span style="color:var(--success);">SUCCESSI</span>
                             <input type="checkbox" id="ds-s1" class="saveable check-succ" onchange="salvaDatiDebounced();">
                             <input type="checkbox" id="ds-s2" class="saveable check-succ" onchange="salvaDatiDebounced();">
                             <input type="checkbox" id="ds-s3" class="saveable check-succ" onchange="salvaDatiDebounced();">
                         </div>
                         <div class="ds-checks">
-                            <span style="color:var(--danger); font-size:10px; font-weight:bold; width: 35px;">FALL</span>
+                            <span style="color:var(--danger);">FALLIMENTI</span>
                             <input type="checkbox" id="ds-f1" class="saveable check-fail" onchange="checkHeartbeat(); salvaDatiDebounced();">
                             <input type="checkbox" id="ds-f2" class="saveable check-fail" onchange="checkHeartbeat(); salvaDatiDebounced();">
                             <input type="checkbox" id="ds-f3" class="saveable check-fail" onchange="checkHeartbeat(); salvaDatiDebounced();">
@@ -257,7 +276,7 @@
 
             <div class="box attacks-box">
                 <button class="btn-clear-box" onclick="resetAttacchi()" title="Svuota Tabella Attacchi">🗑️</button>
-                <div class="box-title">Attacchi & Azioni</div>
+                <div class="box-title">Attacchi & Azioni <span class="box-toggle" onclick="toggleBox(this)" title="Apri/Chiudi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></span></div>
                 <div class="spell-controls-container">
                     <div class="controls-row">
                         <select id="weapon-select" class="input-ui" title="Seleziona un'arma dal database">
@@ -266,8 +285,8 @@
                         <label style="font-size:10px; display:flex; align-items:center; gap: 2px; font-weight:bold; color:var(--text-muted);" title="Sei competente con quest'arma?">
                             <input type="checkbox" id="weapon-prof" checked style="accent-color: var(--accent-main);"> Comp
                         </label>
-                        <input type="number" id="weapon-magic" placeholder="+Mag" class="input-ui no-spinners" style="width: 50px;" title="Inserisci qui bonus magici (es. arma +1 o +2)">
-                        <button onclick="aggiungiArma()" class="btn-add" title="Aggiungi alla tabella sottostante">+</button>
+                        <input type="number" id="weapon-magic" placeholder="+Mag" class="input-ui no-spinners" style="width: 50px;" title="Inserisci bonus magici (es. arma +1)">
+                        <button onclick="aggiungiArma()" class="btn-add" title="Aggiungi alla tabella">+</button>
                     </div>
                 </div>
                 <div class="spell-table-container" style="max-height: 180px; margin-bottom: 10px;">
@@ -281,7 +300,7 @@
 
             <div class="box spell-box">
                 <button class="btn-clear-box" onclick="resetGrimorio()" title="Svuota il Grimorio">🗑️</button>
-                <div class="box-title">Grimorio Incantesimi</div>
+                <div class="box-title">Grimorio Incantesimi <span class="box-toggle" onclick="toggleBox(this)" title="Apri/Chiudi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></span></div>
                 
                 <div id="spell-slots-ui" class="spell-slots-container" style="display: none;">
                     <div class="spell-slot-row" id="ss-row-1"><span class="ss-label">Lvl 1</span><div class="ss-pips"><input type="checkbox" id="ss-1-1" class="saveable spell-pip"><input type="checkbox" id="ss-1-2" class="saveable spell-pip"><input type="checkbox" id="ss-1-3" class="saveable spell-pip"><input type="checkbox" id="ss-1-4" class="saveable spell-pip"></div></div>
@@ -319,7 +338,8 @@
 
         <div class="col col-right">
             <div class="box">
-                <div class="box-title">Risorse & Cariche</div>
+                <button class="btn-clear-box" onclick="resetRisorse()" title="Svuota Tabella Risorse">🗑️</button>
+                <div class="box-title">Risorse & Cariche <span class="box-toggle" onclick="toggleBox(this)" title="Apri/Chiudi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></span></div>
                 <div class="res-row" id="row-res-class" style="display:none;">
                     <div class="res-header"><span id="res-class-name" class="res-name">Punti</span><span class="res-max">Max: <span id="res-class-max">0</span></span></div>
                     <div class="res-pips">
@@ -338,7 +358,7 @@
 
             <div class="box traits-box">
                 <button class="btn-clear-box" onclick="resetTratti()" title="Svuota tabella Tratti">🗑️</button>
-                <div class="box-title">Tratti e Privilegi</div>
+                <div class="box-title">Tratti e Privilegi <span class="box-toggle" onclick="toggleBox(this)" title="Apri/Chiudi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></span></div>
                 <div class="spell-controls-container">
                     <div class="controls-row">
                         <select id="trait-select" class="input-ui" title="Seleziona la tua classe in alto per sbloccare questa lista!">
@@ -362,7 +382,7 @@
             
             <div class="box equip-box">
                 <button class="btn-clear-box" onclick="resetEquipaggiamento()" title="Svuota lo zaino">🗑️</button>
-                <div class="box-title">Equipaggiamento</div>
+                <div class="box-title">Equipaggiamento <span class="box-toggle" onclick="toggleBox(this)" title="Apri/Chiudi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></span></div>
                 <div class="wealth-tracker">
                     <span class="wealth-total" title="Il valore totale di tutte le tue monete convertito in Oro">Patrimonio: <span id="total-gp-display" style="font-size:14px; color:var(--text-main);">0</span> MO</span>
                     <div style="display:flex; gap:5px; align-items:center;">
@@ -405,15 +425,17 @@
             </div>
         </div>
         <div class="box full-width-box">
-            <div class="box-title">Background, Storia e Note</div>
+            <div class="box-title">Background, Storia e Note <span class="box-toggle" onclick="toggleBox(this)" title="Apri/Chiudi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></span></div>
             <textarea id="char-background-notes" class="saveable" placeholder="Scrivi qui la storia del tuo personaggio..."></textarea>
         </div>
     </div>
 </div>
 
 <div class="floating-actions" id="floating-actions">
-    <div class="drag-handle-floating" title="Trascina per spostare il menu">⋮⋮</div>
-    <button class="btn-floating" onclick="apriFamiglio()" title="🐾 Famiglio / Alleato">🐾</button>
+    <div class="drag-handle-floating" title="Trascina per spostare il menu">
+        <svg width="16" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="5" r="1.5"></circle><circle cx="9" cy="12" r="1.5"></circle><circle cx="9" cy="19" r="1.5"></circle><circle cx="15" cy="5" r="1.5"></circle><circle cx="15" cy="12" r="1.5"></circle><circle cx="15" cy="19" r="1.5"></circle></svg>
+    </div>
+    <button class="btn-floating" onclick="apriFamiglio()" title="🐾 Compagno / Famiglio">🐾</button>
     <button class="btn-floating" onclick="apriDadi()" title="🎲 Lancio Dadi Avanzato">🎲</button>
     <button class="btn-floating" onclick="apriDiario()" title="📖 Appunti di Sessione">📖</button>
 </div>
@@ -423,9 +445,9 @@
     <div class="widget-body" style="background: var(--bg-inner); gap: 10px; padding: 15px;">
         <input type="text" id="fam-name" class="saveable hero-name-input" placeholder="Nome Creatura..." style="font-size: 18px; margin-bottom: 0;">
         <div style="display: flex; justify-content: space-around; background: var(--bg-card); padding: 8px; border-radius: 8px; border: 1px solid var(--border-color); box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
-            <div style="text-align: center;"><label style="font-size:10px; font-weight:bold; color:var(--text-muted); display:block;">🛡️ CA</label><input type="number" id="fam-ac" class="saveable no-spinners" style="width: 40px; font-size: 16px; font-weight:bold; text-align:center; border:none; background:transparent; outline:none;" title="Classe Armatura del Famiglio"></div>
-            <div style="text-align: center;"><label style="font-size:10px; font-weight:bold; color:var(--text-muted); display:block;">❤️ MAX</label><input type="number" id="fam-hp-max" class="saveable no-spinners" style="width: 40px; font-size: 16px; font-weight:bold; text-align:center; border:none; background:transparent; outline:none;" title="PF Massimi"></div>
-            <div style="text-align: center;"><label style="font-size:10px; font-weight:bold; color:var(--danger); display:block;">🩸 ATT.</label><input type="number" id="fam-hp" class="saveable no-spinners" style="width: 40px; font-size: 16px; font-weight:bold; color:var(--danger); text-align:center; border:none; background:transparent; outline:none;" title="PF Attuali (sottrai i danni)"></div>
+            <div style="text-align: center;"><label style="font-size:10px; font-weight:bold; color:var(--text-muted); display:block;" title="Classe Armatura Famiglio">🛡️ CA</label><input type="number" id="fam-ac" class="saveable no-spinners" style="width: 40px; font-size: 16px; font-weight:bold; text-align:center; border:none; background:transparent; outline:none;"></div>
+            <div style="text-align: center;"><label style="font-size:10px; font-weight:bold; color:var(--text-muted); display:block;" title="Punti Ferita Massimi">❤️ MAX</label><input type="number" id="fam-hp-max" class="saveable no-spinners" style="width: 40px; font-size: 16px; font-weight:bold; text-align:center; border:none; background:transparent; outline:none;"></div>
+            <div style="text-align: center;"><label style="font-size:10px; font-weight:bold; color:var(--danger); display:block;" title="Punti Ferita Attuali">🩸 ATT.</label><input type="number" id="fam-hp" class="saveable no-spinners" style="width: 40px; font-size: 16px; font-weight:bold; color:var(--danger); text-align:center; border:none; background:transparent; outline:none;"></div>
         </div>
         <textarea id="fam-attacks" class="saveable input-ui" placeholder="⚔️ Attacchi (Es. Morso: +4 TxC, 1d4+2 perforanti)" style="height: 70px;"></textarea>
         <textarea id="fam-notes" class="saveable input-ui" placeholder="✨ Tratti e Abilità (Es. Vantaggio a Percezione)" style="height: 70px;"></textarea>
@@ -440,10 +462,10 @@
 <div id="dice-widget" class="draggable-widget" style="width: 280px;">
     <div class="widget-header"><span>🎲 Lancio Custom</span><span class="widget-close" onclick="chiudiDadi()">✖</span></div>
     <div class="widget-body" style="background: var(--bg-card); gap: 12px; border-bottom-left-radius: 8px; border-bottom-right-radius: 8px;">
-        <div class="roll-mode-toggle" style="width: 100%; display: flex; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
-            <input type="radio" id="widget-mode-dis" name="roll-mode-widget" value="dis" onchange="syncRollMode('dis')"><label for="widget-mode-dis" class="btn-toggle" style="flex:1; text-align:center;">Svantaggio</label>
-            <input type="radio" id="widget-mode-norm" name="roll-mode-widget" value="norm" checked onchange="syncRollMode('norm')"><label for="widget-mode-norm" class="btn-toggle" style="flex:1; text-align:center;">Normale</label>
-            <input type="radio" id="widget-mode-adv" name="roll-mode-widget" value="adv" onchange="syncRollMode('adv')"><label for="widget-mode-adv" class="btn-toggle" style="flex:1; text-align:center;">Vantaggio</label>
+        <div class="fancy-roll-toggle" style="width: 100%; justify-content: center;">
+            <input type="radio" id="widget-mode-dis" name="roll-mode-widget" value="dis" onchange="syncRollMode('dis')"><label for="widget-mode-dis" class="toggle-btn" style="flex:1; text-align:center;">Svant.</label>
+            <input type="radio" id="widget-mode-norm" name="roll-mode-widget" value="norm" checked onchange="syncRollMode('norm')"><label for="widget-mode-norm" class="toggle-btn" style="flex:1; text-align:center;">Norm.</label>
+            <input type="radio" id="widget-mode-adv" name="roll-mode-widget" value="adv" onchange="syncRollMode('adv')"><label for="widget-mode-adv" class="toggle-btn" style="flex:1; text-align:center;">Vant.</label>
         </div>
         <div style="display: flex; gap: 8px; justify-content: center; align-items: center;">
             <input type="number" id="custom-dice-num" value="1" min="1" class="input-ui no-spinners" style="width: 45px; text-align: center; font-size: 16px;">
@@ -471,15 +493,19 @@
 <script src="database.js"></script>
 
 <script>
-// ==========================================
-// 1. FUNZIONI MENU E WIDGET
-// ==========================================
+function toggleBox(el) {
+    const box = el.closest('.box');
+    box.classList.toggle('collapsed-box');
+}
+
 function handleMenuOptions(el) {
     let val = el.value; el.value = ""; 
     if (val === 'new') nuovoPersonaggio();
     if (val === 'delete') eliminaPersonaggio();
     if (val === 'export') esportaDati();
     if (val === 'import') document.getElementById('import-file').click();
+    if (val === 'print') window.print();
+    if (val === 'fullscreen') toggleFullScreen();
     if (val === 'reset') resetDati();
 }
 
@@ -492,6 +518,28 @@ function checkHeartbeat() {
     } else {
         hpBox.classList.remove('dying-heartbeat');
         hpBox.style.animationDuration = '';
+    }
+}
+
+function aggiornaCuore() {
+    let hpMax = parseInt(document.getElementById('hp-max').value) || 0;
+    let hpTotal = parseInt(document.getElementById('hp-total-calc').value) || 0;
+    let heartIcon = document.getElementById('heart-icon');
+
+    if (!heartIcon || hpMax === 0) return;
+
+    let percentualePF = (hpTotal / hpMax) * 100;
+
+    heartIcon.classList.remove('heart-normal', 'heart-medium', 'heart-critical', 'heart-flatline');
+
+    if (hpTotal <= 0) {
+        heartIcon.classList.add('heart-flatline');
+    } else if (percentualePF <= 30) {
+        heartIcon.classList.add('heart-critical');
+    } else if (percentualePF <= 70) {
+        heartIcon.classList.add('heart-medium');
+    } else {
+        heartIcon.classList.add('heart-normal');
     }
 }
 
@@ -511,6 +559,7 @@ function impostaAvatar(dataUrl) {
     if (dataUrl.startsWith('data:video')) { c.innerHTML = `<video autoplay loop muted playsinline style="width:100%; height:100%; object-fit:cover; border-radius:10px;"><source src="${dataUrl}"></video>`; } 
     else { c.innerHTML = `<img src="${dataUrl}" alt="Avatar" style="width:100%; height:100%; object-fit:cover; border-radius:10px;">`; }
 }
+
 function makeDraggable(el, handle) {
     let currentX, currentY, initialX, initialY;
     let xOffset = 0, yOffset = 0;
@@ -531,7 +580,7 @@ function makeDraggable(el, handle) {
     }
     function dragEnd(e) { document.removeEventListener("mouseup", dragEnd); document.removeEventListener("touchend", dragEnd); document.removeEventListener("mousemove", drag); document.removeEventListener("touchmove", drag); }
     function setTranslate(xPos, yPos, elem) {
-        if (elem.classList.contains('floating-actions')) elem.style.transform = `translate3d(${xPos}px, ${yPos}px, 0)`;
+        if (elem.id === 'floating-actions') elem.style.transform = `translate3d(${xPos}px, ${yPos}px, 0)`;
         else elem.style.transform = `translate3d(calc(-50% + ${xPos}px), ${yPos}px, 0)`;
     }
 }
@@ -549,9 +598,6 @@ function chiudiDadi() { document.getElementById('dice-widget').style.display = '
 function apriFamiglio() { document.getElementById('famiglio-widget').style.display = 'flex'; }
 function chiudiFamiglio() { document.getElementById('famiglio-widget').style.display = 'none'; }
 
-// ==========================================
-// 2. DADI E TEMI
-// ==========================================
 function syncRollMode(val) {
     let m = document.getElementById('mode-' + val); let w = document.getElementById('widget-mode-' + val);
     if (m) m.checked = true; if (w) w.checked = true;
@@ -664,9 +710,6 @@ function mostraInfoPopup(tipo, chiave) {
 }
 function chiudiInfoPopup(event, force = false) { if (force || event.target.id === 'info-modal') document.getElementById('info-modal').style.display = 'none'; }
 
-// ==========================================
-// 3. DATABASE INDEXEDDB E GESTIONE PG
-// ==========================================
 let db;
 let pgCorrenteId = localStorage.getItem('pg_attivo_id') || "pg_" + Date.now();
 let timeoutSalvataggio;
@@ -714,7 +757,7 @@ function eliminaPersonaggio() {
 function aggiornaSelettorePG() {
     const sel = document.getElementById('char-selector'); if (!sel || !db) return;
     db.transaction(["characters"], "readonly").objectStore("characters").getAll().onsuccess = e => {
-        sel.innerHTML = '<option value="">-- I Miei Eroi --</option>';
+        sel.innerHTML = '<option value="" class="title-option">-- I Miei Eroi --</option>';
         e.target.result.forEach(pg => {
             let opt = document.createElement('option'); opt.value = pg.id; opt.innerText = pg.name || "Senza Nome";
             if (pg.id === pgCorrenteId) opt.selected = true; sel.appendChild(opt);
@@ -723,9 +766,6 @@ function aggiornaSelettorePG() {
 }
 function cambiaPersonaggio(id) { if(id) caricaDati(id); }
 
-// ==========================================
-// 4. LOGICA SCHEDA E FILTRI (Tratti e Magie)
-// ==========================================
 function popolaDropdowns() {
     let wSel = document.getElementById('weapon-select'); 
     if (wSel && typeof armi5e !== 'undefined') {
@@ -761,11 +801,7 @@ function aggiornaListaIncantesimi() {
     const m = document.getElementById('spell-select');
     
     if(!m) return; 
-    
-    if(!c) {
-        m.innerHTML = '<option value="">Seleziona Classe e Lvl...</option>';
-        return; 
-    }
+    if(!c) { m.innerHTML = '<option value="">Seleziona Classe e Lvl...</option>'; return; }
 
     m.innerHTML = `<option value="">Scegli Magia...</option>`;
     let maxSpellLvl = getMaxSpellLevel(c, lvl);
@@ -809,6 +845,68 @@ function aggiornaListaTratti() {
     }
 }
 
+function consumaMunizioni(nomeArma) {
+    let termineRicarca = "";
+    if (nomeArma.includes("Arco")) termineRicarca = "Frecce";
+    else if (nomeArma.includes("Balestra")) termineRicarca = "Dard";
+    else if (nomeArma.includes("Fionda")) termineRicarca = "Proiettil";
+    else if (nomeArma.includes("Cerbottana")) termineRicarca = "Dard";
+    
+    if(!termineRicarca) return;
+    
+    let trovata = false;
+    document.querySelectorAll('#equip-table-body tr').forEach(row => {
+        if(trovata) return; 
+        let itemName = row.querySelector('.atk-name-clickable').innerText;
+        if(itemName.toLowerCase().includes(termineRicarca.toLowerCase())) {
+            trovata = true;
+            let qtyCell = row.querySelector('td:nth-child(2)');
+            let qty = parseInt(qtyCell.innerText);
+            if(qty > 0) {
+                let weightCell = row.querySelector('td:nth-child(3)');
+                let singleWeight = parseFloat(weightCell.innerText) / qty;
+                qtyCell.innerText = qty - 1;
+                if(!isNaN(singleWeight)) {
+                    weightCell.innerText = ((qty - 1) * singleWeight).toFixed(1);
+                    row.setAttribute('data-peso-tot', (qty - 1) * singleWeight);
+                }
+                mostraToast(`🏹 Usata 1 munizione. <b>${itemName}</b> rimaste: ${qty - 1}`);
+                calcolaPesoTotale();
+                salvaDatiDebounced();
+            } else {
+                mostraToast(`⚠️ <b>${itemName}</b> esaurite!`);
+            }
+        }
+    });
+}
+
+function consumaSlotMagico(lvl, nomeMagia) {
+    if (lvl == 0) return;
+    let slotConsumato = false;
+    for(let p=1; p<=4; p++) {
+        let pip = document.getElementById(`ss-${lvl}-${p}`);
+        if (pip && pip.style.display !== 'none' && !pip.checked) {
+            pip.checked = true;
+            slotConsumato = true;
+            mostraToast(`✨ <b>${nomeMagia}</b> lanciato! (Slot Lvl ${lvl} consumato)`);
+            salvaDatiDebounced();
+            break;
+        }
+    }
+    if(!slotConsumato) {
+        mostraToast(`⚠️ Slot di Livello ${lvl} esauriti! Non puoi lanciare ${nomeMagia}.`);
+    }
+}
+
+function resetCondizioni() {
+    if(confirm("Vuoi rimuovere tutti gli stati attuali?")) {
+        document.querySelectorAll('.conditions-grid input[type="checkbox"]').forEach(c => c.checked = false);
+        salvaDatiDebounced();
+        aggiornaTutto(); 
+        mostraToast("✅ Condizioni ripristinate.");
+    }
+}
+
 function aggiornaTutto() {
     let lvl = parseInt(document.getElementById('char-level').value) || 1; let pb = Math.ceil(lvl / 4) + 1;
     document.getElementById('prof-bonus').value = "+" + pb;
@@ -849,11 +947,13 @@ function aggiornaTutto() {
         let mD = di.match(/^(\d+d\d+)(.*)$/i); let dStr = di; if(mD){ dStr = mD[1] + (dm>0?"+":"") + (dm!==0&&st!=='spell'?dm:""); }
         r.querySelector('.atk-txc').innerText = tStr; r.querySelector('.atk-dmg').innerText = dStr;
         let n = r.querySelector('.atk-name-clickable').innerText.replace(/'/g, "\\'");
-        r.querySelector('.atk-txc').setAttribute('onclick', `tiraDado('TxC ${n}', '1d20${tStr}')`);
+        
+        r.querySelector('.atk-txc').setAttribute('onclick', `consumaMunizioni('${n}'); tiraDado('TxC ${n}', '1d20${tStr}')`);
         r.querySelector('.atk-dmg').setAttribute('onclick', `tiraDado('Danni ${n}', '${dStr}')`);
     });
     
     checkHeartbeat();
+    aggiornaCuore();
     salvaDatiDebounced();
 }
 
@@ -861,9 +961,28 @@ function calcolaPuntiFerita() {
     let hm = parseInt(document.getElementById('hp-max').value)||0; let hb = parseInt(document.getElementById('hp-buff').value)||0; let hd = parseInt(document.getElementById('hp-debuff').value)||0;
     let t = Math.max(0, hm + hb - hd); let d = document.getElementById('hp-total-calc');
     if (d) { d.value = t; d.style.color = (t<=0&&hm>0)?"var(--danger)":"var(--accent-sec)"; if(t>0&&hd>0) document.querySelectorAll('.check-succ, .check-fail').forEach(el=>el.checked=false); }
+    aggiornaCuore();
     salvaDatiDebounced();
 }
-function calcolaDadiVita(lvl) { let c = document.getElementById('char-class').value; let d = document.getElementById('hd-total'); if (d) d.value = c&&typeof dadiVitaMap!=='undefined'&&dadiVitaMap[c] ? "Totale: "+lvl+dadiVitaMap[c] : "Totale: -"; }
+
+function calcolaDadiVita(lvl) { 
+    let c = document.getElementById('char-class').value; 
+    let d = document.getElementById('hd-total'); 
+    if (d) {
+        if (c && typeof dadiVitaMap!=='undefined' && dadiVitaMap[c]) {
+            d.value = dadiVitaMap[c];
+            d.classList.add('rollable');
+            d.setAttribute('onclick', `tiraDado('Dado Vita (${dadiVitaMap[c]})', '1${dadiVitaMap[c]}')`);
+            d.title = "Clicca per lanciare 1 Dado Vita e recuperare PF!";
+        } else {
+            d.value = "-";
+            d.classList.remove('rollable');
+            d.removeAttribute('onclick');
+            d.title = "";
+        }
+    }
+}
+
 function calcolaSlotMagici(lvl) {
     if(typeof fullCasterSlots === 'undefined') return;
     let c = document.getElementById('char-class').value; let s = [0,0,0,0,0,0,0,0,0];
@@ -907,6 +1026,18 @@ function riposoBreve() {
     if(c==="Warlock") for(let i=1;i<=5;i++) for(let p=1;p<=4;p++){ let pi=document.getElementById(`ss-${i}-${p}`); if(pi) pi.checked=false; }
     salvaDatiDebounced(); mostraToast("☕ <b>Riposo Breve</b> completato!");
 }
+function resetRisorse() {
+    if(confirm("Svuotare tutte le Risorse e Cariche extra?")) {
+        document.getElementById('res-c1-name').value = '';
+        document.getElementById('res-c1-max').value = '';
+        document.getElementById('res-c2-name').value = '';
+        document.getElementById('res-c2-max').value = '';
+        document.querySelectorAll('.res-pip').forEach(p => p.checked = false);
+        aggiornaRisorseClasse();
+        salvaDatiDebounced();
+        mostraToast("🗑️ Risorse svuotate!");
+    }
+}
 
 function aggiungiTrattoDaLista() { let s = document.getElementById('trait-select').value; if(s && typeof tratti5e !== 'undefined'){ inserisciTrattoTabella(s.split(" (")[0], tratti5e[s.split(" (")[0]] || "Privilegio di classe."); document.getElementById('trait-select').value=''; } }
 function aggiungiTrattoManuale() { let n=document.getElementById('new-trait-name').value.trim(); let d=document.getElementById('new-trait-desc').value.trim(); if(n){ inserisciTrattoTabella(n, d); document.getElementById('new-trait-name').value=''; document.getElementById('new-trait-desc').value=''; } }
@@ -930,10 +1061,11 @@ function aggiungiIncantesimoManuale() {
     let n = document.getElementById('new-spell-name').value.trim(); let l = parseInt(document.getElementById('new-spell-lvl').value);
     if(n && !isNaN(l)){ inserisciIncantesimoTabella(n, l); document.getElementById('new-spell-name').value=''; document.getElementById('new-spell-lvl').value=''; }
 }
+
 function inserisciIncantesimoTabella(n, l) {
     let tb = document.getElementById('spell-table-body'); if(!tb) return;
     let b = l===0 ? `<span class="spell-lvl-badge">Trucchetto</span>` : `<span class="spell-lvl-badge">Lvl ${l}</span>`;
-    tb.insertAdjacentHTML('beforeend', `<tr data-lvl="${l}"><td style="font-weight:bold; color:var(--text-main); display:flex; align-items:center; flex-wrap:wrap;">${n} ${b}</td><td style="text-align:center; width:10%;"><button class="btn-del" onclick="this.closest('tr').remove(); salvaDati();">X</button></td></tr>`);
+    tb.insertAdjacentHTML('beforeend', `<tr data-lvl="${l}"><td style="display:flex; align-items:center; flex-wrap:wrap;"><span class="atk-name-clickable" style="font-weight:bold; color:var(--text-main);" onclick="consumaSlotMagico(${l}, '${n.replace(/'/g, "\\'")}')" title="Clicca per lanciare e scalare 1 slot">${n}</span> ${b}</td><td style="text-align:center; width:10%;"><button class="btn-del" onclick="this.closest('tr').remove(); salvaDati();">X</button></td></tr>`);
     let r = Array.from(tb.querySelectorAll('tr')); r.sort((x, y) => parseInt(x.getAttribute('data-lvl')) - parseInt(y.getAttribute('data-lvl')));
     tb.innerHTML = ''; r.forEach(x => tb.appendChild(x)); salvaDati();
 }
@@ -1022,6 +1154,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => {
         popolaDropdowns();
         aggiornaTutto();
+        aggiornaCuore();
     }, 100);
 
     document.querySelectorAll('.saveable, .saveable-radio').forEach(el => {

@@ -1,11 +1,12 @@
 {
-  "name": "Scheda D&D 5.5e VTT",
+  "name": "D&D 5.5e VTT Sheet",
   "short_name": "D&D Sheet",
-  "description": "Scheda personaggio interattiva per D&D 5.5e",
+  "description": "Scheda interattiva per Dungeons & Dragons 5.5e",
   "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#ffffff",
+  "background_color": "#1a1a24",
   "theme_color": "#cba052",
+  "orientation": "portrait",
   "icons": [
     {
       "src": "icon-192.png",
